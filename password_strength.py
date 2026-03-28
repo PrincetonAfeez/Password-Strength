@@ -4,6 +4,9 @@ import math # Shannon Entropy
 from rich.console import Console # Rich CLI Library
 from rich.table import Table # Rich Table Library
 from rich.panel import Panel # Rich Panel Library
+import hashlib # SHA-1 Hashing
+import requests # HTTP Requests for API Integration
+
 
 console = Console() # Initialize Console
 
@@ -78,7 +81,7 @@ class PasswordArchitect:
         probabilities = [float(self.password.count(c)) / len(self.password) for c in dict.fromkeys(list(self.password))]
         
         # Shannon Entropy Formula
-        entropy = - sum([p * math.log(p) / math.log(2.0) for p in prob] for p in probabilities if p > 0)
+        entropy = - sum(p * math.log2(p) for p in probabilities if p > 0)
         
         if entropy < 3.5:
             self.improvements.append(f"Low mathematical entropy ({entropy:.2f}). Use a more random variety of characters.")
@@ -130,7 +133,7 @@ class PasswordArchitect:
                 console.print(f"[bold red]•[/bold red] {imp}")
         else:
             console.print(Panel("[bold green]✅ This password meets Architect Standards![/bold green]"))
-            
+
 
 
 
