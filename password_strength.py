@@ -51,6 +51,22 @@ class PasswordArchitect:
                 self.score += 1  # Add 1 point for every character type found
 
     def check_blacklist(self):
+
+        def check_similarity(self):
+        """Feature 6: Checks if the password is too similar to common blacklisted words."""
+        # This is a basic 'Architect' version of a fuzzy check
+        normalized_pw = self.password.lower().replace("0", "o").replace("1", "i").replace("@", "a")
+        
+        try:
+            with open("common_passwords.txt", "r") as f:
+                for line in f:
+                    if normalized_pw == line.strip().lower():
+                        self.improvements.append("Password is too similar to a blacklisted word (Fuzzy Match).")
+                        return True
+        except FileNotFoundError:
+            pass
+        return False
+
         """AC 4: Check against a 'Common Passwords' list."""
         try:
             with open("common_passwords.txt", "r") as f:  # Open the local file
