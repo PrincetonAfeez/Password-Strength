@@ -1,5 +1,6 @@
 import re # Regular Expressions
 import sys # System Exit
+import math # Shannon Entropy
 
 class PasswordArchitect:
     def __init__(self):
@@ -62,7 +63,22 @@ class PasswordArchitect:
                 print(f"  • {item}")
         else:
             print("✅ Strong Password!")
-                    
+
+    def calculate_entropy(self):
+        """Calculates Shannon Entropy to measure randomness/unpredictability."""
+        if not self.password:
+            return 0
+        
+        # Calculate character frequencies
+        probabilities = [float(self.password.count(c)) / len(self.password) for c in dict.fromkeys(list(self.password))]
+        
+        # Shannon Entropy Formula
+        entropy = - sum([p * math.log(p) / math.log(2.0) for p in prob] for p in probabilities if p > 0)
+        
+        if entropy < 3.5:
+            self.improvements.append(f"Low mathematical entropy ({entropy:.2f}). Use a more random variety of characters.")
+        
+        return entropy
 
 if __name__ == "__main__":
     architect = PasswordArchitect()
