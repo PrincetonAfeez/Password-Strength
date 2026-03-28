@@ -1,4 +1,5 @@
-import sys
+import re # Regular Expressions
+import sys # System Exit
 
 class PasswordArchitect:
     def __init__(self):
@@ -19,6 +20,20 @@ class PasswordArchitect:
         self.score += 1
         return True    
 
+    def check_complexity(self):
+        patterns = {
+            "uppercase": r'[A-Z]',
+            "lowercase": r'[a-z]',
+            "number": r'[0-9]',
+            "special": r'[!@#$%^&]'
+        }
+        
+        for name, pattern in patterns.items():
+            if not re.search(pattern, self.password):
+                self.improvements.append(f"Add at least one {name} character.")
+            else:
+                self.score += 1
+                
 if __name__ == "__main__":
     architect = PasswordArchitect()
     while True:
