@@ -33,7 +33,20 @@ class PasswordArchitect:
                 self.improvements.append(f"Add at least one {name} character.")
             else:
                 self.score += 1
-                
+
+    def check_blacklist(self):
+        try:
+            with open("common_passwords.txt", "r") as f:
+                common = [line.strip() for line in f.readlines()]
+                if self.password in common:
+                    self.improvements.append("Password is on a common blacklist. Change it entirely.")
+                    self.score = 0 # Force fail
+                    return False
+        except FileNotFoundError:
+            print("Warning: common_passwords.txt not found.")
+        return True
+            
+
 if __name__ == "__main__":
     architect = PasswordArchitect()
     while True:
