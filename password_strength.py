@@ -126,6 +126,13 @@ class PasswordArchitect:
         if is_blacklisted or is_pwned:
             self.score = 0
 
+        if self.score < 4:
+            new_pw = self.generate_secure_suggestion()
+            console.print(Panel(f"Try this instead: [bold cyan]{new_pw}[/bold cyan]", title="Architect's Suggestion"))
+            
+        # Trigger the JSON export automatically
+        self.export_to_json(entropy_val)
+        
         # Build the Rich Report Table
         table = Table(title="🏗️  Architect's Security Report", show_header=True, header_style="bold cyan")
         table.add_column("Metric", style="dim")
