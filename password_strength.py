@@ -45,7 +45,24 @@ class PasswordArchitect:
         except FileNotFoundError:
             print("Warning: common_passwords.txt not found.")
         return True
-            
+
+    def analyze(self):
+        self.score = 0
+        self.improvements = []
+        
+        self.check_blacklist()
+        self.check_length()
+        self.check_complexity()
+        
+        print(f"\n--- Analysis Result ---")
+        print(f"Score: {self.score}/5")
+        if self.improvements:
+            print("Improvements Needed:")
+            for item in self.improvements:
+                print(f"  • {item}")
+        else:
+            print("✅ Strong Password!")
+                    
 
 if __name__ == "__main__":
     architect = PasswordArchitect()
