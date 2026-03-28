@@ -55,23 +55,6 @@ class PasswordArchitect:
             print("Warning: common_passwords.txt not found.")
         return True
 
-    def analyze(self):
-        self.score = 0
-        self.improvements = []
-        
-        self.check_blacklist()
-        self.check_length()
-        self.check_complexity()
-        
-        print(f"\n--- Analysis Result ---")
-        print(f"Score: {self.score}/5")
-        if self.improvements:
-            print("Improvements Needed:")
-            for item in self.improvements:
-                print(f"  • {item}")
-        else:
-            print("✅ Strong Password!")
-
     def calculate_entropy(self):
         """Calculates Shannon Entropy to measure randomness/unpredictability."""
         if not self.password:
@@ -116,7 +99,24 @@ class PasswordArchitect:
         self.check_length()
         self.check_complexity()
         entropy_val = self.calculate_entropy()
-        
+
+        # Guard Clauses: If these fail, we don't care about length/complexity
+        is_blacklisted = not self.check_blacklist()
+        is_pwned = self.check_pwned_api()
+
+        if is_blacklisted or is_pwned:
+            self.score = 0
+
+        print(f"\n--- Analysis Result ---")
+        print(f"Score: {self.score}/5")
+        if self.improvements:
+            print("Improvements Needed:")
+            for item in self.improvements:
+                print(f"  • {item}")
+        else:
+            print("✅ Strong Password!")
+
+
         # UI Rendering
         table = Table(title="Architect's Security Report")
         table.add_column("Metric", style="cyan")
@@ -142,5 +142,5 @@ class PasswordArchitect:
 if __name__ == "__main__":
     architect = PasswordArchitect()
     while True:
-        pw = architect.get_input()
-        print(f"Analyzing: {pw}")
+        architect.get_input() # This sets self.password
+        architect.analyze()   # This processes and prints the report
