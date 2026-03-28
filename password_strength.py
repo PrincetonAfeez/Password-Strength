@@ -6,6 +6,8 @@ import requests  # Library for making HTTP requests to the HIBP API
 from rich.console import Console  # Rich tool for advanced terminal output
 from rich.table import Table  # Rich tool for creating formatted data tables
 from rich.panel import Panel  # Rich tool for displaying text in bordered boxes
+import secrets # Library for generating cryptographically secure random numbers
+import string # Library for string operations
 
 # Initialize the Rich Console for professional CLI formatting
 console = Console()
@@ -125,6 +127,16 @@ class PasswordArchitect:
         else:
             console.print(Panel("[bold green]✅ This password meets Architect Standards![/bold green]"))
 
+    def generate_secure_suggestion(self):
+        """Feature 4: Generates a cryptographically secure 16-char password suggestion."""
+        # Define the character pool (Uppercase, Lowercase, Digits, and Special)
+        alphabet = string.ascii_letters + string.digits + "!@#$%^&"
+        
+        # Build a 16-character string by picking randomly from the secure alphabet
+        suggestion = ''.join(secrets.choice(alphabet) for i in range(16))
+        
+        return suggestion # Return the secure string for the UI to display
+        
 # Main execution loop
 if __name__ == "__main__":
     architect = PasswordArchitect()
