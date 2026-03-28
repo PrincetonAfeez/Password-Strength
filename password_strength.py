@@ -12,6 +12,13 @@ class PasswordArchitect:
             sys.exit()
         return self.password
 
+    def check_length(self):
+        if len(self.password) < 12:
+            self.improvements.append("Increase length to at least 12 characters.")
+            return False
+        self.score += 1
+        return True    
+
 if __name__ == "__main__":
     architect = PasswordArchitect()
     while True:
