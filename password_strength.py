@@ -1,6 +1,11 @@
 import re # Regular Expressions
 import sys # System Exit
 import math # Shannon Entropy
+from rich.console import Console # Rich CLI Library
+from rich.table import Table # Rich Table Library
+from rich.panel import Panel # Rich Panel Library
+
+console = Console() # Initialize Console
 
 class PasswordArchitect:
     def __init__(self):
@@ -98,12 +103,39 @@ class PasswordArchitect:
             print(f"Skipping API check: {e}")
         return False
 
-
-
-
-
-
+    def analyze(self):
+        self.score = 0
+        self.improvements = []
         
+        # Run all evaluators
+        self.check_blacklist()
+        self.check_pwned_api()
+        self.check_length()
+        self.check_complexity()
+        entropy_val = self.calculate_entropy()
+        
+        # UI Rendering
+        table = Table(title="Architect's Security Report")
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="magenta")
+        
+        table.add_row("Password Length", str(len(self.password)))
+        table.add_row("Shannon Entropy", f"{entropy_val:.2f} bits")
+        table.add_row("Final Score", f"{self.score}/5")
+
+        console.print(table)
+        
+        if self.improvements:
+            for imp in self.improvements:
+                console.print(f"[bold red]•[/bold red] {imp}")
+        else:
+            console.print(Panel("[bold green]✅ This password meets Architect Standards![/bold green]"))
+            
+
+
+
+
+
 if __name__ == "__main__":
     architect = PasswordArchitect()
     while True:
