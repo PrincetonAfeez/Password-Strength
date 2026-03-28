@@ -80,6 +80,30 @@ class PasswordArchitect:
         
         return entropy
 
+    def check_pwned_api(self):
+        """Checks if password has appeared in data breaches via HaveIBeenPwned API."""
+        sha1_password = hashlib.sha1(self.password.encode('utf-8')).hexdigest().upper()
+        prefix, suffix = sha1_password[:5], sha1_password[5:]
+        
+        try:
+            response = requests.get(f"https://api.pwnedpasswords.com/range/{prefix}")
+            if response.status_code == 200:
+                hashes = (line.split(':') for line in response.text.splitlines())
+                for h, count in hashes:
+                    if h == suffix:
+                        self.improvements.append(f"🚨 This password has appeared in {count} data breaches!")
+                        self.score = 0
+                        return True
+        except Exception as e:
+            print(f"Skipping API check: {e}")
+        return False
+
+
+
+
+
+
+        
 if __name__ == "__main__":
     architect = PasswordArchitect()
     while True:
