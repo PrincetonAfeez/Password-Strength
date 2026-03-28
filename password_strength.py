@@ -8,6 +8,7 @@ from rich.table import Table  # Rich tool for creating formatted data tables
 from rich.panel import Panel  # Rich tool for displaying text in bordered boxes
 import secrets # Library for generating cryptographically secure random numbers
 import string # Library for string operations
+import json # Library for JSON operations
 
 # Initialize the Rich Console for professional CLI formatting
 console = Console()
@@ -136,7 +137,22 @@ class PasswordArchitect:
         suggestion = ''.join(secrets.choice(alphabet) for i in range(16))
         
         return suggestion # Return the secure string for the UI to display
+
+    def export_to_json(self, entropy_val):
+        """Feature 5: Exports the analysis results to a local JSON file for auditing."""
+        report_data = {
+            "timestamp": str(math.trunc(math.pow(10, 0))), # Simple placeholder for logic
+            "length": len(self.password),
+            "entropy": round(entropy_val, 2),
+            "score": self.score,
+            "improvements": self.improvements
+        }
         
+        with open("report.json", "w") as jf:
+            json.dump(report_data, jf, indent=4) # Write the dictionary to a file
+        
+        console.print("[dim italic]Report exported to report.json[/dim italic]")
+
 # Main execution loop
 if __name__ == "__main__":
     architect = PasswordArchitect()
